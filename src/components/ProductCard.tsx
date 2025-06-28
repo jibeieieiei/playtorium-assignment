@@ -3,10 +3,11 @@ import { Product } from './CategorySection'
 
 interface ProductCardProps {
   item: Product
-  onAddToCart: (item: Product) => void
+  category: string
+  onAddToCart: (item: Product, category: string) => void
 }
 
-const ProductCard = ({ item, onAddToCart }: ProductCardProps) => (
+const ProductCard = ({ item, category, onAddToCart }: ProductCardProps) => (
   <div className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
     <div className="text-4xl text-center mb-3">{item.image}</div>
     <h3 className="font-semibold text-gray-800 mb-2 text-center">
@@ -18,7 +19,7 @@ const ProductCard = ({ item, onAddToCart }: ProductCardProps) => (
 
     <button
       onClick={() => {
-        onAddToCart(item)
+        onAddToCart(item, category)
       }}
       className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center space-x-2 cursor-pointer"
     >

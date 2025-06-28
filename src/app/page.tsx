@@ -7,24 +7,29 @@ import PaymentModal from '@/components/PaymentModal'
 
 export interface CartItem extends Product {
   quantity: number
+  category: string
 }
 
 const ShoppingPage = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([])
-  console.log(cartItems, 'cartItems')
+
   const [open, setOpen] = useState<boolean>(false)
 
-  const addToCart = (item: Product): void => {
+  const addToCart = (item: Product, category: string): void => {
     setCartItems((prev) => {
       const existingItem = prev.find((cartItem) => cartItem.id === item.id)
       if (existingItem) {
         return prev.map((cartItem) =>
           cartItem.id === item.id
-            ? { ...cartItem, quantity: cartItem.quantity + 1 }
+            ? {
+                ...cartItem,
+                quantity: cartItem.quantity + 1,
+                category: category,
+              }
             : cartItem
         )
       }
-      return [...prev, { ...item, quantity: 1 }]
+      return [...prev, { ...item, quantity: 1, category: category }]
     })
   }
 
@@ -45,9 +50,6 @@ const ShoppingPage = () => {
 
   const handleCheckout = (): void => {
     setOpen(true)
-    // alert(
-    //   `Proceeding to checkout with ${getTotalItems()} items for ฿${getTotalPrice().toLocaleString()}`
-    // )
   }
 
   return (
@@ -77,12 +79,14 @@ const ShoppingPage = () => {
         <CategorySection
           title="Clothing"
           items={MOCK_DATA.clothing}
+          category={'clothing'}
           onAddToCart={addToCart}
         />
         {/* Accessories Section */}
         <CategorySection
           title="Accessories"
           items={MOCK_DATA.accessories}
+          category={'accessories'}
           onAddToCart={addToCart}
         />
 
@@ -90,6 +94,7 @@ const ShoppingPage = () => {
         <CategorySection
           title="Electronics"
           items={MOCK_DATA.electronics}
+          category={'electronics'}
           onAddToCart={addToCart}
         />
       </main>

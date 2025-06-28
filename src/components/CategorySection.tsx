@@ -10,11 +10,13 @@ export interface Product {
 interface CategorySectionProps {
   title: string
   items: Product[]
-  onAddToCart: (item: Product) => void
+  category: string
+  onAddToCart: (item: Product, category: string) => void
 }
 const CategorySection = ({
   title,
   items,
+  category,
   onAddToCart,
 }: CategorySectionProps) => (
   <section className="w-1/3 mb-12">
@@ -24,7 +26,11 @@ const CategorySection = ({
     <div className="flex flex-wrap gap-6 justify-center">
       {items.map((item) => (
         <div key={item.id} className="w-72">
-          <ProductCard item={item} onAddToCart={onAddToCart} />
+          <ProductCard
+            item={item}
+            onAddToCart={onAddToCart}
+            category={category}
+          />
         </div>
       ))}
     </div>

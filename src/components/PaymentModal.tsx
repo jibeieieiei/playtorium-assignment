@@ -50,9 +50,8 @@ const PaymentModal = ({ open, handleOpenChange, items }: PaymentModalProps) => {
       category: 'clothing',
     },
   })
-  const summary = calculateTotal(items)
+  const summary = calculateTotal(items, discount)
 
-  console.log(discount)
   return (
     <Dialog
       open={open}
@@ -73,7 +72,7 @@ const PaymentModal = ({ open, handleOpenChange, items }: PaymentModalProps) => {
             <div className="flex flex-col gap-2">
               <span className="font-bold">Coupon</span>
               <RadioGroup
-                defaultValue="amount"
+                defaultValue={discount.coupon.type}
                 className="flex gap-2"
                 onValueChange={(value) => {
                   setDiscount({
@@ -112,7 +111,7 @@ const PaymentModal = ({ open, handleOpenChange, items }: PaymentModalProps) => {
             <div className="flex flex-col gap-2">
               <span className="font-bold">On Top</span>
               <RadioGroup
-                defaultValue="category"
+                defaultValue={discount.onTop.type}
                 className="flex gap-2"
                 onValueChange={(value) => {
                   setDiscount({
@@ -133,7 +132,7 @@ const PaymentModal = ({ open, handleOpenChange, items }: PaymentModalProps) => {
               {discount.onTop.type === 'category' ? (
                 <div className="flex flex-col gap-2">
                   <RadioGroup
-                    defaultValue="clothing"
+                    defaultValue={discount.onTop.category}
                     className="flex gap-2"
                     onValueChange={(value) => {
                       setDiscount({
