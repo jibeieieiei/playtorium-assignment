@@ -5,12 +5,13 @@ import CategorySection, { Product } from '@/components/CategorySection'
 import { MOCK_DATA } from '@/constants/data'
 import PaymentModal from '@/components/PaymentModal'
 
-interface CartItem extends Product {
+export interface CartItem extends Product {
   quantity: number
 }
 
 const ShoppingPage = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([])
+  console.log(cartItems, 'cartItems')
   const [open, setOpen] = useState<boolean>(false)
 
   const addToCart = (item: Product): void => {
@@ -121,7 +122,11 @@ const ShoppingPage = () => {
           </button>
         </div>
       )}
-      <PaymentModal open={open} handleOpenChange={handleOpenChange} />
+      <PaymentModal
+        open={open}
+        handleOpenChange={handleOpenChange}
+        items={cartItems}
+      />
     </div>
   )
 }

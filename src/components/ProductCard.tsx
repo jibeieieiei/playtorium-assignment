@@ -15,8 +15,11 @@ const ProductCard = ({ item, onAddToCart }: ProductCardProps) => (
     <p className="text-lg font-bold text-blue-600 mb-3 text-center">
       ฿{item.price.toLocaleString()}
     </p>
+
     <button
-      onClick={() => onAddToCart(item)}
+      onClick={() => {
+        onAddToCart(item)
+      }}
       className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center space-x-2 cursor-pointer"
     >
       <Plus size={16} />
