@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { calculateTotal } = require('../lib/cart')
 
 describe('Unit test from assignment', () => {
