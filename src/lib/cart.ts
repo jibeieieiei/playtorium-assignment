@@ -1,16 +1,94 @@
-import { Product } from '@/components/CategorySection'
+import { CartItem } from '@/app/page'
+import { Discount } from '@/components/PaymentModal'
 
-export function calculateTotal(products: Product[]): {
+export function calculateTotal(
+  items: CartItem[],
+  discount: Discount
+): {
   subtotal: number
   total: number
   discount: number
 } {
-  let subtotal = products.reduce((total, item) => total + item.price, 0)
-  let discount = 0
-  const total = subtotal - discount
+  const subtotal = items.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  )
+  let discountTotal = 0
+  let total = subtotal
+
+  // Coupon
+  if (discount.coupon.type === 'amount' && discount.coupon.value) {
+    discountTotal += Number(discount.coupon.value)
+    total -= Number(discount.coupon.value)
+    console.log(
+      `subtotal = ${subtotal}, discountTotal = ${discountTotal}, amount = ${discount.coupon.value}`
+    )
+  } else if (discount.coupon.type === 'percentage' && discount.coupon.value) {
+    discountTotal += (subtotal * Number(discount.coupon.value)) / 100
+    total -= (subtotal * Number(discount.coupon.value)) / 100
+
+    console.log(
+      `subtotal = ${subtotal}, discountTotal = ${discountTotal}, amount = ${discount.coupon.value}`
+    )
+  }
+
+  // On Top
+  if (
+    discount.onTop.type === 'category' &&
+    discount.onTop.category !== '' &&
+    discount.onTop.amount
+  ) {
+    const existingItems = items.filter(
+      (item) => item.category === discount.onTop.category
+    )
+    const categoryTotal = existingItems.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    )
+    const discountPercentageCoupon = 100 - (total / subtotal) * 100
+    if (discountPercentageCoupon) {
+      discountTotal +=
+        (((categoryTotal * (100 - Number(discount.onTop.amount))) / 100) *
+          discountPercentageCoupon) /
+        100
+      total -=
+        (((categoryTotal * (100 - Number(discount.onTop.amount))) / 100) *
+          discountPercentageCoupon) /
+        100
+    } else {
+      discountTotal += (categoryTotal * Number(discount.onTop.amount)) / 100
+      total -= (categoryTotal * Number(discount.onTop.amount)) / 100
+    }
+  } else if (discount.onTop.type === 'point' && discount.onTop.points) {
+    discountTotal += Number(discount.onTop.points)
+    // handle 20 %
+    const maxDiscountOnTopPoints = total * 0.2
+    if (discountTotal > maxDiscountOnTopPoints) {
+      discountTotal = maxDiscountOnTopPoints
+      total -= maxDiscountOnTopPoints
+    } else {
+      total -= Number(discount.onTop.points)
+    }
+  }
+
+  // Seasonal
+  if (
+    discount.seasonal &&
+    discount.seasonal.discount &&
+    discount.seasonal.every
+  ) {
+    discountTotal +=
+      Math.floor(total / Number(discount.seasonal.every)) *
+      Number(discount.seasonal.discount)
+    console.log(discountTotal, 'discountTotal')
+    total -=
+      Math.floor(total / Number(discount.seasonal.every)) *
+      Number(discount.seasonal.discount)
+  }
+
   return {
     subtotal,
-    total: total,
-    discount,
+    discount: discountTotal,
+    total: total < 0 ? 0 : total,
   }
 }

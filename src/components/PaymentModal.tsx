@@ -15,11 +15,13 @@ import { Input } from './ui/input'
 import { RadioGroup, RadioGroupItem } from './ui/radio-group'
 import { Label } from './ui/label'
 import { Separator } from './ui/separator'
+import { Product } from './CategorySection'
 
 interface PaymentModalProps {
   open: boolean
   handleOpenChange: (open: boolean) => void
   items: CartItem[]
+  removeFromCart: (item: Product) => void
 }
 
 export type Discount = {
@@ -40,7 +42,12 @@ export type Discount = {
   }
 }
 
-const PaymentModal = ({ open, handleOpenChange, items }: PaymentModalProps) => {
+const PaymentModal = ({
+  open,
+  handleOpenChange,
+  items,
+  removeFromCart,
+}: PaymentModalProps) => {
   const [discount, setDiscount] = useState<Discount>({
     coupon: {
       type: 'amount',
@@ -97,13 +104,15 @@ const PaymentModal = ({ open, handleOpenChange, items }: PaymentModalProps) => {
                 value={discount?.coupon?.value ?? ''}
                 className="border"
                 onChange={(e) => {
-                  setDiscount({
-                    ...discount,
-                    coupon: {
-                      type: discount?.coupon?.type,
-                      value: e.target.value,
-                    },
-                  })
+                  if (/^\d*$/.test(e.target.value)) {
+                    setDiscount({
+                      ...discount,
+                      coupon: {
+                        type: discount?.coupon?.type,
+                        value: e.target.value,
+                      },
+                    })
+                  }
                 }}
               />
             </div>
@@ -225,7 +234,7 @@ const PaymentModal = ({ open, handleOpenChange, items }: PaymentModalProps) => {
               key={item.id}
               className="w-full flex items-center justify-between"
             >
-              <PaymentCard item={item} />
+              <PaymentCard item={item} removeFromCart={removeFromCart} />
             </div>
           ))}
         </div>

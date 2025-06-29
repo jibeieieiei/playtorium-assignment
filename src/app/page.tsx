@@ -33,6 +33,12 @@ const ShoppingPage = () => {
     })
   }
 
+  const removeFromCart = (item: Product): void => {
+    setCartItems((prev) => {
+      return prev.filter((cartItem) => cartItem.id !== item.id)
+    })
+  }
+
   const getTotalItems = (): number => {
     return cartItems.reduce((total, item) => total + item.quantity, 0)
   }
@@ -131,6 +137,7 @@ const ShoppingPage = () => {
         open={open}
         handleOpenChange={handleOpenChange}
         items={cartItems}
+        removeFromCart={removeFromCart}
       />
     </div>
   )
