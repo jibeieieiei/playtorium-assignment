@@ -66,7 +66,10 @@ const ShoppingPage = () => {
           <h1 className="text-2xl font-bold text-gray-900">Shopping Store</h1>
 
           <div className="relative">
-            <button className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+            <button
+              className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors cursor-pointer"
+              onClick={handleCheckout}
+            >
               <ShoppingCart size={20} />
               <span>Cart</span>
               {getTotalItems() > 0 && (
