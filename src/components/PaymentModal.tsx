@@ -11,7 +11,7 @@ import {
 import { calculateTotal } from '@/lib/cart'
 import PaymentCard from './PaymentCard'
 import { useState } from 'react'
-import { Input } from './ui/input'
+import { NumericFormat } from 'react-number-format'
 import { RadioGroup, RadioGroupItem } from './ui/radio-group'
 import { Label } from './ui/label'
 import { Separator } from './ui/separator'
@@ -97,23 +97,21 @@ const PaymentModal = ({
                   <Label htmlFor="coupon2">Percentage</Label>
                 </div>
               </RadioGroup>
-              <Input
-                type="number"
-                placeholder={discount?.coupon?.type ?? 'Amount'}
-                max={100}
+              <NumericFormat
+                placeholder={discount?.coupon?.type}
                 value={discount?.coupon?.value ?? ''}
-                className="border"
-                onChange={(e) => {
-                  if (/^\d*$/.test(e.target.value)) {
-                    setDiscount({
-                      ...discount,
-                      coupon: {
-                        type: discount?.coupon?.type,
-                        value: e.target.value,
-                      },
-                    })
-                  }
+                onValueChange={(e) => {
+                  setDiscount({
+                    ...discount,
+                    coupon: {
+                      type: discount?.coupon?.type,
+                      value: e.value,
+                    },
+                  })
                 }}
+                allowNegative={false}
+                min={0}
+                className="border rounded-md px-2 py-1"
               />
             </div>
             {/* On Top */}
@@ -163,66 +161,70 @@ const PaymentModal = ({
                       <Label htmlFor="category3">Electronics</Label>
                     </div>
                   </RadioGroup>
-                  <Input
-                    type="number"
+                  <NumericFormat
                     placeholder={'Amount % off '}
                     value={discount?.onTop?.amount ?? ''}
-                    className="border"
-                    onChange={(e) => {
+                    onValueChange={(e) => {
                       setDiscount({
                         ...discount,
-                        onTop: { ...discount.onTop, amount: e.target.value },
+                        onTop: { ...discount.onTop, amount: e.value },
                       })
                     }}
+                    allowNegative={false}
+                    min={0}
+                    className="border rounded-md px-2 py-1"
                   />
                 </div>
               ) : (
-                <Input
-                  type="number"
+                <NumericFormat
                   placeholder={'Your points'}
                   value={discount?.onTop?.points ?? ''}
-                  className="border"
-                  onChange={(e) => {
+                  onValueChange={(e) => {
                     setDiscount({
                       ...discount,
-                      onTop: { ...discount.onTop, points: e.target.value },
+                      onTop: { ...discount.onTop, points: e.value },
                     })
                   }}
+                  allowNegative={false}
+                  min={0}
+                  className="border rounded-md px-2 py-1"
                 />
               )}
             </div>
             {/* Seasonal */}
             <div className="flex flex-col gap-2">
               <span className="font-bold">Seasonal</span>
-              <Input
+              <NumericFormat
                 placeholder="Discount XXX THB"
-                type="number"
                 value={discount?.seasonal?.discount ?? ''}
-                className="border"
-                onChange={(e) => {
+                onValueChange={(e) => {
                   setDiscount({
                     ...discount,
                     seasonal: {
                       ...discount.seasonal,
-                      discount: e.target.value,
+                      discount: e.value,
                     },
                   })
                 }}
+                allowNegative={false}
+                min={0}
+                className="border rounded-md px-2 py-1"
               />
-              <Input
+              <NumericFormat
                 placeholder="Every XXX THB"
-                type="number"
                 value={discount?.seasonal?.every ?? ''}
-                className="border"
-                onChange={(e) => {
+                onValueChange={(e) => {
                   setDiscount({
                     ...discount,
                     seasonal: {
                       ...discount.seasonal,
-                      every: e.target.value,
+                      every: e.value,
                     },
                   })
                 }}
+                allowNegative={false}
+                min={0}
+                className="border rounded-md px-2 py-1"
               />
             </div>
           </div>
